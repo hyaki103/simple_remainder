@@ -51,7 +51,7 @@ public class TaskListDao {
 
     public int update(TaskItems taskItem) {
         int number = jdbcTemplate.update(
-                "UPDATE tasklist SET task = ?, deadline = ?, done = ?, WHERE id = ?",
+                "UPDATE tasklist SET task = ?, deadline = ?, done = ? WHERE id = ?",
                 taskItem.task(),
                 taskItem.deadline(),
                 taskItem.done(),
