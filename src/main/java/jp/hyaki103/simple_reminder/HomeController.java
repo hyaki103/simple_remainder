@@ -1,8 +1,10 @@
 package jp.hyaki103.simple_reminder;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +17,7 @@ import java.util.UUID;
 
 @Controller
 public class HomeController {
-    record TaskItems(String id, String task, String deadline, boolean done){}
+    record TaskItems(String id, @NonNull String task, String deadline, boolean done){}
     private List<TaskItems> taskItems = new ArrayList<>();
     private final TaskListDao dao;
 
