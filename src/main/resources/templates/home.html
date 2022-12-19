@@ -11,14 +11,64 @@
   <div class="task_form">
     <h2>タスクの登録</h2>
 
-    <form action="/add">
+    <form action="/add" class="validationForm" novalidate>
       <label>タスク</label>
-      <input name="task" placeholder="タスク" type="text" />
+      <input class="required" name="task" placeholder="タスク" type="text" />
       <label>期限</label>
-      <input name="deadline" placeholder="期日" type="date" />
+      <input name="deadline" type="date" />
       <input type="submit" value="登録" />
     </form>
   </div>
+  <script>
+  // class="ValidationForm"とnovalidate属性を指定したform要素を独自に検証
+  document.addEventListener('DOMContentLoaded', () => {
+    // .validationFormを指定した最初のForm要素を取得
+    const validationForm = document.querySelector('.validationForm');
+    // .validationFormを指定したform要素が存在すれば
+    if(validationForm) {
+      // エラーを表示するspan要素に付与するクラス名
+      const errorClassName = "error";
+
+      // requiredクラスを指定された要素の集まり
+      const requiredElems = document.querySelectorAll('.required');
+      //エラーメッセージを表示する span 要素を生成して親要素に追加する関数
+      //elem ：対象の要素
+      //errorMessage ：表示するエラーメッセージ
+      const createError = (elem, errorMessage) => {
+        //span 要素を生成
+        const errorSpan = document.createElement('span');
+        //エラー用のクラスを追加（設定）
+        errorSpan.classList.add(errorClassName);
+        //aria-live 属性を設定
+        errorSpan.setAttribute('aria-live', 'polite');
+        //引数に指定されたエラーメッセージを設定
+        errorSpan.textContent = errorMessage;
+        //elem の親要素の子要素として追加
+        elem.parentNode.appendChild(errorSpan);
+      }
+
+    //form 要素の submit イベントを使った送信時の処理
+    validationForm.addEventListener('submit', (e) => {
+      //エラーを表示する要素を全て取得して削除（初期化）
+      const errorElems = validationForm.querySelectorAll('.' + errorClassName);
+      errorElems.forEach( (elem) => {
+        elem.remove();
+      });
+
+      //.required を指定した要素を検証
+      requiredElems.forEach( (elem) => {
+        //値（value プロパティ）の前後の空白文字を削除
+        const elemValue = elem.value.trim();
+        //値が空の場合はエラーを表示してフォームの送信を中止
+        if(elemValue.length === 0) {
+          createError(elem, '入力は必須です');
+          e.preventDefault();
+        }
+      });
+    });
+    }
+  });
+  </script>
 
   <div class="taskList">
     <h2>現在のタスク一覧</h2>

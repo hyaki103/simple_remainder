@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Controller
 public class HomeController {
-    record TaskItems(String id, @NonNull String task, String deadline, boolean done){}
+    record TaskItems(String id, String task, String deadline, boolean done){}
     private List<TaskItems> taskItems = new ArrayList<>();
     private final TaskListDao dao;
 
