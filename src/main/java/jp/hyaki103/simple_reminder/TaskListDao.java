@@ -9,6 +9,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,14 +34,20 @@ public class TaskListDao {
 
     public List<TaskItems> findAll() {
         String query = "SELECT * FROM tasklist";
-
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
         List<Map<String, Object>> result = jdbcTemplate.queryForList(query);
         List<TaskItems> taskItems = result.stream()
-                .map((Map<String, Object> row) -> new TaskItems(
-                        row.get("id").toString(),
-                        row.get("task").toString(),
-                        row.get("deadline").toString(),
-                        (Boolean)row.get("done")))
+                .map((Map<String, Object> row) -> {
+                    try {
+                        return new TaskItems(
+                                row.get("id").toString(),
+                                row.get("task").toString(),
+                                sdFormat.parse(row.get("deadline").toString()),
+                                (Boolean)row.get("done"));
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .toList();
         return taskItems;
     }
